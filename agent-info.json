@@ -128,13 +128,12 @@
 
   "projects": {
     "mewgenics-optimizer": {
-      "repo": "https://github.com/madsnmpetersen/ClaudeCode",
-      "clone_url": "git@github.com:madsnmpetersen/ClaudeCode.git",
+      "repo": "https://github.com/madsnmpetersen/mewgenics-optimizer",
+      "clone_url": "git@github.com:madsnmpetersen/mewgenics-optimizer.git",
       "local_path": "~/ClaudeCode/mewgenics-optimizer",
       "description": "Mewgenics cat breeding optimizer — reads save files, computes optimal room/furniture/cat arrangement",
       "run": "python3 mewgenics_optimizer.py --refresh",
-      "config_template": "mewgenics_config.example.json",
-      "note": "Currently in ClaudeCode monorepo; consider spinning out to own repo if it grows significantly"
+      "config_template": "mewgenics_config.example.json"
     }
   },
 
