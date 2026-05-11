@@ -1,9 +1,0 @@
-{
-  "_comment": "Copy this to mewgenics_config.json and fill in your paths/URLs.",
-  "save_url": "http://<windows-pc-ip>:8765/Mewgenics/<steam-id>/saves/<save-name>.sav",
-  "save_local": "~/ClaudeCode/mewgenics-optimizer/steamcampaign01.sav",
-  "furniture_db": "~/ClaudeCode/mewgenics-optimizer/furniture_effects.json",
-  "gpak_url": "http://<windows-pc-ip>:8766/resources.gpak",
-  "kittens": [],
-  "discard_threshold": 20
-}
