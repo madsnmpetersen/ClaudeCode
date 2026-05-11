@@ -1,0 +1,148 @@
+{
+  "agent": "claude-code",
+  "description": "Claude Code AI coding agent (Anthropic). Runs interactively in the terminal or as a background agent via OpenClaw.",
+
+  "github_account": {
+    "username": "madsnmpetersen",
+    "noreply_email": "25483470+madsnmpetersen@users.noreply.github.com",
+    "profile_url": "https://github.com/madsnmpetersen"
+  },
+
+  "authentication": {
+    "ssh": {
+      "purpose": "Git operations — push, pull, clone over SSH",
+      "private_key": "~/.ssh/id_ed25519",
+      "public_key": "~/.ssh/id_ed25519.pub",
+      "key_comment": "claude-code",
+      "key_type": "ed25519",
+      "passphrase": "none",
+      "ssh_config": "~/.ssh/config — Host github.com with AddKeysToAgent yes",
+      "added_to_github_as": "Claude Code",
+      "verify": "ssh -T git@github.com",
+      "expected_response": "Hi madsnmpetersen! You've successfully authenticated..."
+    },
+    "gh_cli": {
+      "purpose": "GitHub API — create/delete repos, manage issues, PRs, releases, etc.",
+      "binary": "gh",
+      "account": "madsnmpetersen",
+      "protocol": "ssh",
+      "token_storage": "GNOME Keyring (managed automatically by gh)",
+      "token_scopes": ["gist", "read:org", "repo"],
+      "retrieve_token": "gh auth token",
+      "verify": "gh auth status",
+      "re_authenticate": "gh auth login --git-protocol ssh --hostname github.com",
+      "add_scope": "gh auth refresh -h github.com -s <scope_name>"
+    }
+  },
+
+  "git_config": {
+    "user.name": "Claude Code",
+    "user.email": "25483470+madsnmpetersen@users.noreply.github.com",
+    "default_branch": "main",
+    "set_commands": [
+      "git config --global user.name \"Claude Code\"",
+      "git config --global user.email \"25483470+madsnmpetersen@users.noreply.github.com\"",
+      "git config --global init.defaultBranch main"
+    ]
+  },
+
+  "keyring": {
+    "backend": "GNOME Keyring (libsecret)",
+    "retrieve_example": "secret-tool lookup agent claude-code service github key <field>",
+    "entries": [
+      { "key": "username", "lookup": "secret-tool lookup agent claude-code service github key username" },
+      { "key": "email",    "lookup": "secret-tool lookup agent claude-code service github key email"    },
+      { "key": "repo",     "lookup": "secret-tool lookup agent claude-code service github key repo"     }
+    ]
+  },
+
+  "conventions": {
+    "repo_per_project": true,
+    "default_visibility": "private",
+    "default_branch": "main",
+    "commit_footer": "Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
+  },
+
+  "new_project_workflow": {
+    "description": "Standard steps to create and set up a new project repo",
+    "steps": [
+      {
+        "step": 1,
+        "action": "Create remote repo via gh CLI",
+        "command": "gh repo create madsnmpetersen/<repo-name> --private --description \"<description>\" --clone",
+        "notes": "Automatically clones into ./<repo-name>/ — skip --clone to create without cloning"
+      },
+      {
+        "step": 2,
+        "action": "Enter directory and set up git identity if needed",
+        "commands": [
+          "cd <repo-name>",
+          "git config user.name \"Claude Code\"",
+          "git config user.email \"25483470+madsnmpetersen@users.noreply.github.com\""
+        ],
+        "notes": "Skip if global git config is already set correctly (verify with git config --global -l)"
+      },
+      {
+        "step": 3,
+        "action": "Create .gitignore appropriate for the project type",
+        "command": "gh api /gitignore/templates/<language> --jq .source > .gitignore",
+        "alternatives": [
+          "curl https://www.toptal.com/developers/gitignore/api/<language> > .gitignore",
+          "Write manually"
+        ]
+      },
+      {
+        "step": 4,
+        "action": "Add files, commit, push",
+        "commands": [
+          "git add <files>",
+          "git commit -m \"<message>\\n\\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\"",
+          "git push -u origin main"
+        ]
+      }
+    ]
+  },
+
+  "common_gh_commands": {
+    "create_repo":      "gh repo create madsnmpetersen/<name> --private --description \"...\" --clone",
+    "list_repos":       "gh repo list madsnmpetersen",
+    "clone_repo":       "gh repo clone madsnmpetersen/<name>",
+    "view_repo":        "gh repo view madsnmpetersen/<name>",
+    "create_pr":        "gh pr create --title \"...\" --body \"...\"",
+    "list_prs":         "gh pr list",
+    "create_issue":     "gh issue create --title \"...\" --body \"...\"",
+    "list_issues":      "gh issue list",
+    "create_release":   "gh release create <tag> --title \"...\" --notes \"...\"",
+    "auth_status":      "gh auth status",
+    "auth_token":       "gh auth token"
+  },
+
+  "common_git_commands": {
+    "clone_via_ssh":    "git clone git@github.com:madsnmpetersen/<repo>.git",
+    "check_remote":     "git remote -v",
+    "push_first_time":  "git push -u origin main",
+    "pull_latest":      "git pull",
+    "create_branch":    "git checkout -b <branch-name>",
+    "commit_with_footer": "git commit -m \"$(printf '<title>\\n\\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>')\""
+  },
+
+  "projects": {
+    "mewgenics-optimizer": {
+      "repo": "https://github.com/madsnmpetersen/ClaudeCode",
+      "clone_url": "git@github.com:madsnmpetersen/ClaudeCode.git",
+      "local_path": "~/ClaudeCode/mewgenics-optimizer",
+      "description": "Mewgenics cat breeding optimizer — reads save files, computes optimal room/furniture/cat arrangement",
+      "run": "python3 mewgenics_optimizer.py --refresh",
+      "config_template": "mewgenics_config.example.json",
+      "note": "Currently in ClaudeCode monorepo; consider spinning out to own repo if it grows significantly"
+    }
+  },
+
+  "notes": [
+    "SSH private key is at ~/.ssh/id_ed25519 — never commit this file.",
+    "gh CLI token is managed by GNOME Keyring — retrieve with: gh auth token",
+    "Secrets are in GNOME Keyring, not in this file.",
+    "Standard practice: one GitHub repo per project, private by default.",
+    "All commits should include the Co-Authored-By footer."
+  ]
+}
